@@ -9,3 +9,10 @@ function HomePage() {
     );
 }
 export default HomePage;
+/*Total de dispositivos
+
+Último backup
+
+Estado general
+
+Accesos rápidos (botón para hacer backup, agregar dispositivo)*/
