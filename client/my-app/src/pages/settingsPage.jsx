@@ -1,4 +1,4 @@
-import NavBar from "../components/navBar";
+import SideBar from "../components/sideBar";
 
 /*Configuración general del sistema.
 
@@ -12,7 +12,7 @@ Opcional: Enlace a integración con nube*/
  function SettingsPage() {
     return (
         <div>
-            <NavBar />
+            <SideBar />
             <h1 className="text-2xl font-bold text-black">Settings Page</h1>
         </div>
     );

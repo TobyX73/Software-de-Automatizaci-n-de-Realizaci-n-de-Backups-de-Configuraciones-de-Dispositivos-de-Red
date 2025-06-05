@@ -1,7 +1,7 @@
-export default function DevicesLogic() {
+export default function BackupCard() {
     return (
         <div>
-            <h1 className="text-2xl font-bold">Devices Logic</h1>
+            <h1 className="text-2xl text-amber-300 font-bold">Backup</h1>
         </div>
     );
 }

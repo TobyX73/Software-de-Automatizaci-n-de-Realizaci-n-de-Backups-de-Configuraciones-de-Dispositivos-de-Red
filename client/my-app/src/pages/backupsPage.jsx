@@ -1,4 +1,5 @@
-import NavBar from "../components/navBar";
+import SideBar from "../components/sideBar";
+import HomePage from "./homePage";
 
 /*Administración de respaldos.
 
@@ -12,7 +13,8 @@ Indicador de estado (éxito, error)*/
  function BackupsPage() {
     return (
         <div>
-             <NavBar />
+             <SideBar />
+           
             <h1 className="text-2xl text-black font-bold">Backups Page</h1>
         </div>
     );

@@ -1,4 +1,5 @@
-import NavBar from "../components/navBar";
+
+import SideBar from "../components/sideBar";
 
 /*Gestión de dispositivos de red.
 
@@ -10,7 +11,7 @@ Modal o formulario lateral para Alta/Edición*/
  function DevicesPage() {
     return (
         <div>
-            <NavBar />
+            <SideBar />
             <h1 className="text-2xl text-black font-bold">Devices Page</h1>
         </div>
     );
