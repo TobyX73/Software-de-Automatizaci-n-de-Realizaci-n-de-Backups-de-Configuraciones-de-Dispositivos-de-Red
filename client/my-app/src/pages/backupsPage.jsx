@@ -1,5 +1,5 @@
 import SideBar from "../components/sideBar";
-import HomePage from "./homePage";
+import HomePage from "../homePage";
 
 /*Administración de respaldos.
 
