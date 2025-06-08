@@ -1,24 +1,50 @@
 package com.toby.BackupApi;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import io.github.cdimascio.dotenv.Dotenv;
 
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+import java.sql.SQLException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringBootApplication
 public class BackupApiApplication {
 
 	public static void main(String[] args) {
+		// 🔹 Cargar .env ANTES de que arranque Spring
+		Dotenv dotenv = Dotenv.configure()
+				.directory(System.getProperty("user.dir"))
+				.ignoreIfMissing()
+				.load();
 
-		Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+		setIfPresent("DB_URL", "spring.datasource.url", dotenv);
+		setIfPresent("DB_USER", "spring.datasource.username", dotenv);
+		setIfPresent("DB_PASS", "spring.datasource.password", dotenv);
 
-		// Asigna a variables del sistema para que Spring las lea
-		System.setProperty("DB_URL", dotenv.get("DB_URL"));
-		System.setProperty("DB_USER", dotenv.get("DB_USER"));
-		System.setProperty("DB_PASS", dotenv.get("DB_PASS"));
+		// 🔹 Driver de PostgreSQL (necesario si no se autoconfigura)
+		System.setProperty("spring.datasource.driver-class-name", "org.postgresql.Driver");
 
 		SpringApplication.run(BackupApiApplication.class, args);
-
 	}
 
+	private static void setIfPresent(String envKey, String springKey, Dotenv dotenv) {
+		String value = dotenv.get(envKey);
+		if (value != null) {
+			System.setProperty(springKey, value);
+			System.out.println("✅ " + springKey + " <- " + value);
+		} else {
+			System.out.println("⚠️  No se encontró " + envKey + " en el .env");
+		}
+	}
+
+	@Autowired
+	private DataSource dataSource;
+
+	@PostConstruct
+	public void showDatabaseConnection() throws SQLException {
+		System.out.println("📌 Conectado a: " + dataSource.getConnection().getMetaData().getURL());
+	}
 }
