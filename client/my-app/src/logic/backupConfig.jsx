@@ -99,7 +99,7 @@ export default function BackupConfig() {
       </div>
       <div className="flex items-center gap-2 mb-4">
         <input type="checkbox" checked={auto} onChange={() => setAuto(!auto)} />
-        <span className="text-gray-700">Activar respaldo automático</span>
+        <span className="text-gray-700">Activar respaldo automatico</span>
       </div>
       <button
         className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition font-medium"
