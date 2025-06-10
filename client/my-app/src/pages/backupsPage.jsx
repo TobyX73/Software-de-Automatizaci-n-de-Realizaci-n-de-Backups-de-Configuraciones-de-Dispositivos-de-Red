@@ -1,22 +1,22 @@
 import SideBar from "../components/sideBar";
-import HomePage from "./homePage";
+import BackupsTable from "../components/backupTable";
+import BackupConfig from "../logic/backupConfig";
 
-/*Administración de respaldos.
-
-Lista de respaldos por dispositivo
-
-Selector de periodicidad
-
-Botones: Ejecutar backup, Descargar, Eliminar
-
-Indicador de estado (éxito, error)*/
- function BackupsPage() {
-    return (
-        <div>
-             <SideBar />
-           
-            <h1 className="text-2xl text-black font-bold">Backups Page</h1>
+function BackupsPage() {
+  return (
+    <div className="min-h-screen flex bg-gray-100">
+      <SideBar />
+      <main className="flex-1 p-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2">
+            <BackupsTable />
+          </div>
+          <div>
+            <BackupConfig />
+          </div>
         </div>
-    );
+      </main>
+    </div>
+  );
 }
 export default BackupsPage;
