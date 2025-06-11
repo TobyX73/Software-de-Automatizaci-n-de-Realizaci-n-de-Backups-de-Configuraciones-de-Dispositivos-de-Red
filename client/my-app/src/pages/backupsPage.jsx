@@ -1,5 +1,4 @@
 import SideBar from "../components/sideBar";
-import HomePage from "../homePage";
 
 /*Administración de respaldos.
 
@@ -12,7 +11,7 @@ Botones: Ejecutar backup, Descargar, Eliminar
 Indicador de estado (éxito, error)*/
  function BackupsPage() {
     return (
-        <div>
+        <div className="min-h-screen flex bg-gray-100">
              <SideBar />
            
             <h1 className="text-2xl text-black font-bold">Backups Page</h1>
