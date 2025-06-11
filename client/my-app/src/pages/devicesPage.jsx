@@ -22,7 +22,7 @@ function DevicesPage() {
         <DevicesLogic />
 
         <button
-          className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-colors z-50"
+          className="cursor-pointer fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-colors z-50"
           style={{ minWidth: "220px" }}
           onClick={() => navigate("/addDevice")}
         >

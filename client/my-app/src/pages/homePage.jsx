@@ -93,13 +93,13 @@ function HomePage() {
         <div className="flex flex-col md:flex-row gap-4 mt-8">
           <button
             onClick={() => navigate("/devices")}
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition font-medium"
+            className="cursor-pointer flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition font-medium "
           >
             Agregar dispositivo
           </button>
           <button
             onClick={() => navigate("/backups")}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition font-medium"
+            className="cursor-pointer flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg transition font-medium"
           >
             Ejecutar Backup manual
           </button>
