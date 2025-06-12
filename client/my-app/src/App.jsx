@@ -1,6 +1,6 @@
 import BackupsPage from './pages/backupsPage';
 import DevicesPage from './pages/devicesPage';
-import HomePage from './pages/homePage'
+import HomePage from './pages/homePage';
 import LogsPage from './pages/logsPage';
 import SettingsPage from './pages/settingsPage';
 import './style/App.css'
