@@ -2,13 +2,6 @@ import SideBar from "../components/sideBar";
 import DevicesLogic from "../components/deviceTable";
 import { useNavigate } from "react-router-dom";
 
-/*Gestión de dispositivos de red.
-
-Tabla de dispositivos
-
-Botones: Agregar, Editar, Eliminar, Probar conexión
-
-Modal o formulario lateral para Alta/Edición*/
 function DevicesPage() {
   const navigate = useNavigate();
 
