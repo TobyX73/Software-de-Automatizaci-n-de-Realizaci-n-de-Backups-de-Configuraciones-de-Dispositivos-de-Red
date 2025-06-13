@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const estados = {
   Exitoso: "text-green-600",
@@ -13,9 +14,9 @@ export default function BackupsTable() {
   const [filtroFecha, setFiltroFecha] = useState("desc");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/backups")
-      .then((res) => res.json())
-      .then((data) => setBackupsData(data))
+    axios
+      .get("http://localhost:5000/api/backups")
+      .then((res) => setBackupsData(res.data))
       .catch(() => setBackupsData([]));
   }, []);
 
