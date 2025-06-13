@@ -37,4 +37,9 @@ public class DeviceService {
     public List<Device> findDevicesByNombreContaining(String nombre) {
         return deviceRepository.findByNameContaining(nombre);
     }
+
+    public long countDevices() {
+        return deviceRepository.count();
+    }
+
 }
