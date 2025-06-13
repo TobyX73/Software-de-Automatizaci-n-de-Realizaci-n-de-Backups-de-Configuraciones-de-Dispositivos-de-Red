@@ -3,6 +3,7 @@ package com.toby.BackupApi;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -10,7 +11,9 @@ import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-@SpringBootApplication
+
+@SpringBootApplication(scanBasePackages = "com.toby.BackupApi")
+@EnableScheduling
 public class BackupApiApplication {
 
 	public static void main(String[] args) {
