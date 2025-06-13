@@ -1,5 +1,5 @@
-// hooks/useLogs.js
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 export const useLogs = () => {
   const [logs, setLogs] = useState([]);
@@ -10,48 +10,37 @@ export const useLogs = () => {
   const [chosenLog, setChosenLog] = useState(null);
 
   useEffect(() => {
-    // Aquí vendría tu fetch de la base de datos/API
-    const data = [
-      {
-    date: "2025-06-07 20:27:08",
-    type: "INFO",
-    device: "Servidor Backup",
-    description: "Backup automático ejecutado.",
-    extendedDescription: "Aca se amplia la info :p", 
-  },
-  {
-    date: "2025-03-02 10:15:45",
-    type: "ERROR",
-    device: "Router Principal",
-    description: "Backup fallido por fallo de autenticación.",
-    extendedDescription: "Las credenciales configuradas estaban vencidas. Requiere revisión en el sistema de tokens."
-  },
-  {
-    date: "2024-02-14 07:25:58",
-    type: "INFO",
-    device: "Router Secundario",
-    description: "Conexión.",
-    extendedDescription: "El proceso de backup se completó correctamente sin errores en menos de 3 minutos."
-  },
-    ];
-    setLogs(data);
-  }, []);
+    // Cambia la URL por la de tu backend
+    axios
+      .get("http://localhost:3001/api/logs", {
+        params: { type, date, device },
+      })
+      .then((res) => setLogs(res.data))
+      .catch((err) => console.error(err));
+  }, [type, date, device]);
 
   useEffect(() => {
     const filtered = logs.filter((log) => {
       const matchesType = type === "Todos" || log.type === type;
       const matchesDate = !date || log.date.startsWith(date);
-      const matchesDevice = device === "Todos" || log.device === device;
+      const matchesDevice =
+        device === "Todos" ||
+        log.device.toLowerCase().includes(device.toLowerCase());
       return matchesType && matchesDate && matchesDevice;
     });
     setFilteredLogs(filtered);
   }, [type, date, device, logs]);
 
-  const clearHistory = () => {
-    setLogs([]);
-    setFilteredLogs([]);
-    setChosenLog(null);
-    };
+  const clearHistory = async () => {
+    try {
+      await axios.delete("http://localhost:3001/api/logs");
+      setLogs([]);
+      setFilteredLogs([]);
+      setChosenLog(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const exportLogs = () => {
     const encabezado = ["Fecha", "Tipo", "Dispositivo", "Descripción"];
