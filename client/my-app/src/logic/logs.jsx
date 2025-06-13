@@ -31,11 +31,16 @@ export const useLogs = () => {
     setFilteredLogs(filtered);
   }, [type, date, device, logs]);
 
-  const clearHistory = () => {
-    setLogs([]);
-    setFilteredLogs([]);
-    setChosenLog(null);
-    };
+  const clearHistory = async () => {
+    try {
+      await axios.delete("http://localhost:3001/api/logs");
+      setLogs([]);
+      setFilteredLogs([]);
+      setChosenLog(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const exportLogs = () => {
     const encabezado = ["Fecha", "Tipo", "Dispositivo", "Descripción"];
