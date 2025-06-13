@@ -10,7 +10,7 @@ export default function SideBar() {
             <nav className="flex-1">
                 <ul className="space-y-2">
                     <li>
-                        <a href="/" className="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-700 transition">
+                        <a href="/home" className="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-700 transition">
                             <FaHome className="text-blue-300" /> Dashboard
                         </a>
                     </li>

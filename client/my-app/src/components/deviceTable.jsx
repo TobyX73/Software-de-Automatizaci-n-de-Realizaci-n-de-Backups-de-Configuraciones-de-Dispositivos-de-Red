@@ -1,47 +1,5 @@
-import React, { useState } from "react";
-
-const initialDevices = [
-  {
-    id: 1,
-    nombre: "Router Principal",
-    ip: "192.168.1.1",
-    usuario: "admin",
-    tipo: "Router",
-    estado: "Exitoso",
-  },
-  {
-    id: 2,
-    nombre: "Switch Oficina",
-    ip: "192.168.1.2",
-    usuario: "user",
-    tipo: "Switch",
-    estado: "Fallido",
-  },
-  {
-    id: 3,
-    nombre: "Firewall",
-    ip: "192.168.1.3",
-    usuario: "root",
-    tipo: "Firewall",
-    estado: "Pendiente",
-  },
-  {
-    id: 4,
-    nombre: "Firewall",
-    ip: "192.168.1.3",
-    usuario: "root",
-    tipo: "Switch",
-    estado: "Pendiente",
-  },
-  {
-    id: 5,
-    nombre: "Firewall",
-    ip: "192.168.1.46",
-    usuario: "root",
-    tipo: "Firewall",
-    estado: "Exitoso",
-  },
-];
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const estadoColors = {
   Exitoso: "bg-green-100 text-green-700",
@@ -50,17 +8,24 @@ const estadoColors = {
 };
 
 export default function DevicesLogic() {
-  const [devices, setDevices] = useState(initialDevices);
+  const [devices, setDevices] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [filtroNombre, setFiltroNombre] = useState("");
   const [estadoFiltro, setEstadoFiltro] = useState("Todos");
-
-  // Nuevo estado para edición
   const [editId, setEditId] = useState(null);
   const [editData, setEditData] = useState({});
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deviceToDelete, setDeviceToDelete] = useState(null);
+
+  const API_URL = "http://localhost:5000/api/devices";
+
+  // Cargar dispositivos desde la API
+  useEffect(() => {
+    axios
+      .get(API_URL)
+      .then(({ data }) => setDevices(data)) // Destructure res.data directly
+      .catch(() => console.error("Error al cargar dispositivos")); // Remove unused err
+  }, []);
 
   // Ordenar dispositivos
   const sortedDevices = [...devices].sort((a, b) => {
@@ -76,7 +41,7 @@ export default function DevicesLogic() {
     return 0;
   });
 
-  // Filtrar dispositivos por todos los campos y por estado
+  // Filtrar dispositivos por texto y estado
   const filteredDevices = sortedDevices.filter((device) => {
     const matchTexto = Object.values(device)
       .join(" ")
@@ -95,13 +60,18 @@ export default function DevicesLogic() {
     }));
   };
 
-  // Guardar cambios de edición
+  // Guardar cambios de edición (PUT)
   const handleSave = (id) => {
-    setDevices((prev) =>
-      prev.map((dev) => (dev.id === id ? { ...dev, ...editData } : dev))
-    );
-    setEditId(null);
-    setEditData({});
+    axios
+      .put(`${API_URL}/${id}`, editData)
+      .then(() => {
+        setDevices((prev) =>
+          prev.map((dev) => (dev.id === id ? { ...dev, ...editData } : dev))
+        );
+        setEditId(null);
+        setEditData({});
+      })
+      .catch(() => alert("Error al guardar cambios")); // Remove unused err
   };
 
   // Cancelar edición
@@ -110,10 +80,16 @@ export default function DevicesLogic() {
     setEditData({});
   };
 
+  // Eliminar dispositivo (DELETE)
   const handleDelete = (id) => {
-    setDevices((prev) => prev.filter((dev) => dev.id !== id));
-    setShowDeleteModal(false);
-    setDeviceToDelete(null);
+    axios
+      .delete(`${API_URL}/${id}`)
+      .then(() => {
+        setDevices((prev) => prev.filter((dev) => dev.id !== id));
+        setShowDeleteModal(false);
+        setDeviceToDelete(null);
+      })
+      .catch(() => alert("Error al eliminar dispositivo")); // Remove unused err
   };
 
   return (
@@ -275,7 +251,7 @@ export default function DevicesLogic() {
                   </td>
                   <td className="px-6 py-4 text-center space-x-2">
                     <button
-                      className="hover:bg-yellow-200 transition text-white py-2 px-1 rounded-full text-sm cursor-pointer"
+                      className="hover:bg-yellow-200 transition p-1 rounded-full cursor-pointer"
                       title="Editar"
                       onClick={() => {
                         setEditId(device.id);
@@ -284,7 +260,7 @@ export default function DevicesLogic() {
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="w-5 h-5 text-black"
+                        className="w-5 h-5 text-yellow-600"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -296,7 +272,7 @@ export default function DevicesLogic() {
                     </button>
                     <button
                       title="Eliminar"
-                      className="hover:bg-red-300 transition text-white px-2 py-1 rounded-full text-sm cursor-pointer"
+                      className="hover:bg-red-200 transition p-1 rounded-full cursor-pointer"
                       onClick={() => {
                         setShowDeleteModal(true);
                         setDeviceToDelete(device);
@@ -304,19 +280,16 @@ export default function DevicesLogic() {
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="text-red-500"
-                        x="0px"
-                        y="0px"
-                        width="24"
-                        height="24"
+                        className="w-5 h-5 text-red-600"
                         viewBox="0 0 24 24"
+                        fill="currentColor"
                       >
-                        <path d="M 10 2 L 9 3 L 4 3 L 4 5 L 5 5 L 5 20 C 5 20.522222 5.1913289 21.05461 5.5683594 21.431641 C 5.9453899 21.808671 6.4777778 22 7 22 L 17 22 C 17.522222 22 18.05461 21.808671 18.431641 21.431641 C 18.808671 21.05461 19 20.522222 19 20 L 19 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 7 5 L 17 5 L 17 20 L 7 20 L 7 5 z M 9 7 L 9 18 L 11 18 L 11 7 L 9 7 z M 13 7 L 13 18 L 15 18 L 15 7 L 13 7 z"></path>
+                        <path d="M10 2H14L14 4H20V6H4V4H10L9 3H14L10 2ZM7 5H17V20H7V5ZM9 7V18H11V7H9ZM13 7V18H15V7H13Z" />
                       </svg>
                     </button>
                     <button
                       title="Probar Conexión"
-                      className="hover:bg-sky-200 transition text-white px-2 py-1 rounded-full text-sm cursor-pointer"
+                      className="hover:bg-sky-200 transition p-1 rounded-full cursor-pointer"
                     >
                       <svg
                         width="24"
