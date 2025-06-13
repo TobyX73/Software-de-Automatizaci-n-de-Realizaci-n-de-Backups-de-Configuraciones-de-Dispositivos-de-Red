@@ -5,6 +5,9 @@ import com.toby.BackupApi.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.toby.BackupApi.service.SSHService;
+import java.util.NoSuchElementException;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +18,9 @@ public class DeviceRestController {
 
     @Autowired
     private DeviceService deviceService;
+
+    @Autowired
+    private SSHService sshService;
 
     @GetMapping
     public ResponseEntity<List<Device>> getAllDevices() {
@@ -76,4 +82,31 @@ public class DeviceRestController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countDevices() {
+        long count = deviceService.countDevices();
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/{id}/test-connection")
+    public ResponseEntity<String> probarConexion(@PathVariable Long id) {
+        Device device = deviceService.getDeviceById(id)
+                .orElseThrow(() -> new NoSuchElementException("Dispositivo no encontrado"));
+
+        boolean exito = sshService.probarConexionSSH(
+                device.getIpHostname(),
+                22,
+                device.getUsername(),
+                device.getPassword()
+        );
+
+        if (exito) {
+            return ResponseEntity.ok("Conexión exitosa");
+        } else {
+            return ResponseEntity.status(503).body("No se pudo establecer conexión SSH");
+        }
+    }
+
+
 }
