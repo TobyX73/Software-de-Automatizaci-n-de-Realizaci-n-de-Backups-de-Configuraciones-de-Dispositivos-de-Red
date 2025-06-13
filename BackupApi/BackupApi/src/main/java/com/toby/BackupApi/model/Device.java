@@ -21,16 +21,19 @@ public class Device {
 
     private String status;
 
+    private String password;
+
     public Device() {
     }
 
-    public Device(Long id, String name, String ipHostname, String username, String type, String status) {
+    public Device(Long id, String name, String ipHostname, String username, String type, String status, String password) {
         this.id = id;
         this.name = name;
         this.ipHostname = ipHostname;
         this.username = username;
         this.type = type;
         this.status = status;
+        this.password = password;
     }
 
     // Getters y Setters
@@ -52,4 +55,7 @@ public class Device {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 }
