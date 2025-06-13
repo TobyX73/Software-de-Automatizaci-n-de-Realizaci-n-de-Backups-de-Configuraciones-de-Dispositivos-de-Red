@@ -9,5 +9,4 @@ import java.util.List;
 public interface DeviceRepository extends JpaRepository<Device, Long> {
     Optional<Device> findByName(String name);
     List<Device> findByNameContaining(String name);
-    // Puedes agregar métodos personalizados si lo necesitas
 }
