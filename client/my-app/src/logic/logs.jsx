@@ -10,9 +10,8 @@ export const useLogs = () => {
   const [chosenLog, setChosenLog] = useState(null);
 
   useEffect(() => {
-    // Cambia la URL por la de tu backend
     axios
-      .get("http://localhost:3001/api/logs", {
+      .get("http://localhost:8080/api/logs", {
         params: { type, date, device },
       })
       .then((res) => setLogs(res.data))
@@ -33,7 +32,7 @@ export const useLogs = () => {
 
   const clearHistory = async () => {
     try {
-      await axios.delete("http://localhost:3001/api/logs");
+      await axios.delete("http://localhost:8080/api/logs");
       setLogs([]);
       setFilteredLogs([]);
       setChosenLog(null);
@@ -44,7 +43,9 @@ export const useLogs = () => {
 
   const exportLogs = () => {
     const encabezado = ["Fecha", "Tipo", "Dispositivo", "Descripción"];
-    const filas = logs.map(log => [log.date, log.type, log.device, log.description].join(","));
+    const filas = logs.map((log) =>
+      [log.date, log.type, log.device, log.description].join(",")
+    );
     const csvContent = [encabezado.join(","), ...filas].join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -55,14 +56,19 @@ export const useLogs = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-};
+  };
 
   return {
-    type, setType,
-    date, setDate,
-    device, setDevice,    
+    type,
+    setType,
+    date,
+    setDate,
+    device,
+    setDevice,
     logs: filteredLogs,
-    chosenLog, setChosenLog,
-    clearHistory, exportLogs
+    chosenLog,
+    setChosenLog,
+    clearHistory,
+    exportLogs,
   };
 };

@@ -15,7 +15,7 @@ export default function BackupsTable() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/backups")
+      .get("http://localhost:8080/backups")
       .then((res) => setBackupsData(res.data))
       .catch(() => setBackupsData([]));
   }, []);
@@ -36,6 +36,14 @@ export default function BackupsTable() {
         ? b.fecha.localeCompare(a.fecha)
         : a.fecha.localeCompare(b.fecha)
     );
+
+  // Ejecutar backup manual
+  const handleEjecutar = (id) => {
+    axios
+      .get(`http://localhost:8080/backups/execute/${id}`)
+      .then((res) => alert(res.data?.message || "Backup ejecutado"))
+      .catch(() => alert("Error al ejecutar backup"));
+  };
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
@@ -101,13 +109,10 @@ export default function BackupsTable() {
                 {b.estado}
               </td>
               <td className="py-2 px-2 flex gap-2 flex-wrap">
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-sm">
-                  Descargar
-                </button>
-                <button className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-sm">
-                  Eliminar
-                </button>
-                <button className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-sm">
+                <button
+                  className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-sm"
+                  onClick={() => handleEjecutar(b.id)}
+                >
                   Ejecutar ahora
                 </button>
               </td>

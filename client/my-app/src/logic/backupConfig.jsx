@@ -8,7 +8,7 @@ export default function BackupConfig() {
   const [mensaje, setMensaje] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/dispositivos")
+    fetch("http://localhost:8080/devices")
       .then((res) => res.json())
       .then((data) => setDispositivos(data))
       .catch(() => setDispositivos([]));
@@ -21,7 +21,7 @@ export default function BackupConfig() {
       return;
     }
     try {
-      const res = await fetch("http://localhost:5000/api/backup-config", {
+      const res = await fetch("http://localhost:8080/backups/config", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -56,8 +56,8 @@ export default function BackupConfig() {
         >
           <option value="">Seleccione un dispositivo</option>
           {dispositivos.map((d) => (
-            <option key={d.id} value={d.nombre}>
-              {d.nombre}
+            <option key={d.id} value={d.name}>
+              {d.name}
             </option>
           ))}
         </select>

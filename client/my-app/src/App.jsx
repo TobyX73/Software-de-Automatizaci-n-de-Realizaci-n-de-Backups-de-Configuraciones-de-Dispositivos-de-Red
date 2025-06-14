@@ -5,11 +5,11 @@ import LogsPage from "./pages/logsPage";
 import AddDevice from "./pages/addDevice";
 import Login from "./pages/login";
 import "./style/App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
 
@@ -19,7 +19,7 @@ function App() {
         <Route path="/logs" element={<LogsPage />} />
         <Route path="/addDevice" element={<AddDevice />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

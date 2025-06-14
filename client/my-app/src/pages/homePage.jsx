@@ -11,13 +11,13 @@ function HomePage() {
   const [desconectados, setDesconectados] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/dispositivos")
+    fetch("http://localhost:8080/devices")
       .then((res) => res.json())
       .then((data) => {
         setTotalDispositivos(data.length);
-        setConectados(data.filter((d) => d.estado === "Conectado").length);
+        setConectados(data.filter((d) => d.status === "Conectado").length);
         setDesconectados(
-          data.filter((d) => d.estado === "Desconectado").length
+          data.filter((d) => d.status === "Desconectado").length
         );
       })
       .catch(() => {
@@ -26,7 +26,7 @@ function HomePage() {
         setDesconectados(0);
       });
 
-    fetch("http://localhost:5000/api/backups")
+    fetch("http://localhost:8080/backups")
       .then((res) => res.json())
       .then((data) => {
         setTotalBackups(data.length);

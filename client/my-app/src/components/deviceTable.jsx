@@ -5,6 +5,7 @@ const estadoColors = {
   Exitoso: "bg-green-100 text-green-700",
   Fallido: "bg-red-100 text-red-700",
   Pendiente: "bg-orange-100 text-orange-700",
+  null: "bg-gray-100 text-gray-700",
 };
 
 export default function DevicesLogic() {
@@ -17,14 +18,14 @@ export default function DevicesLogic() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deviceToDelete, setDeviceToDelete] = useState(null);
 
-  const API_URL = "http://localhost:5000/api/devices";
+  const API_URL = "http://localhost:8080/devices";
 
   // Cargar dispositivos desde la API
   useEffect(() => {
     axios
       .get(API_URL)
-      .then(({ data }) => setDevices(data)) // Destructure res.data directly
-      .catch(() => console.error("Error al cargar dispositivos")); // Remove unused err
+      .then(({ data }) => setDevices(data))
+      .catch(() => console.error("Error al cargar dispositivos"));
   }, []);
 
   // Ordenar dispositivos
@@ -43,12 +44,21 @@ export default function DevicesLogic() {
 
   // Filtrar dispositivos por texto y estado
   const filteredDevices = sortedDevices.filter((device) => {
-    const matchTexto = Object.values(device)
+    const matchTexto = [
+      device.id,
+      device.name,
+      device.ipHostname,
+      device.username,
+      device.type,
+      device.status,
+    ]
       .join(" ")
       .toLowerCase()
       .includes(filtroNombre.toLowerCase());
     const matchEstado =
-      estadoFiltro === "Todos" ? true : device.estado === estadoFiltro;
+      estadoFiltro === "Todos"
+        ? true
+        : (device.status || "Pendiente") === estadoFiltro;
     return matchTexto && matchEstado;
   });
 
@@ -71,7 +81,7 @@ export default function DevicesLogic() {
         setEditId(null);
         setEditData({});
       })
-      .catch(() => alert("Error al guardar cambios")); // Remove unused err
+      .catch(() => alert("Error al guardar cambios"));
   };
 
   // Cancelar edición
@@ -89,7 +99,17 @@ export default function DevicesLogic() {
         setShowDeleteModal(false);
         setDeviceToDelete(null);
       })
-      .catch(() => alert("Error al eliminar dispositivo")); // Remove unused err
+      .catch(() => alert("Error al eliminar dispositivo"));
+  };
+
+  // Probar conexión SSH
+  const handleTestConnection = (id) => {
+    axios
+      .get(`${API_URL}/${id}/test-connection`)
+      .then((res) => {
+        alert(res.data?.message || "Conexión exitosa");
+      })
+      .catch(() => alert("Error al probar la conexión SSH"));
   };
 
   return (
@@ -132,6 +152,7 @@ export default function DevicesLogic() {
           <option value="Exitoso">Exitoso</option>
           <option value="Fallido">Fallido</option>
           <option value="Pendiente">Pendiente</option>
+          <option value="null">Sin estado</option>
         </select>
       </div>
       <table className="min-w-full text-black bg-white rounded-lg shadow overflow-hidden">
@@ -149,15 +170,15 @@ export default function DevicesLogic() {
                 : ""}
             </th>
             <th className="px-6 py-3 text-center font-semibold">Nombre</th>
-            <th className="px-6 py-3 text-center font-semibold">IP</th>
+            <th className="px-6 py-3 text-center font-semibold">IP/Hostname</th>
             <th className="px-6 py-3 text-center font-semibold">Usuario</th>
             <th className="px-6 py-3 text-center font-semibold">Tipo</th>
             <th
               className="px-6 py-3 text-center font-semibold cursor-pointer"
-              onClick={() => handleSort("estado")}
+              onClick={() => handleSort("status")}
             >
               Estado{" "}
-              {sortConfig.key === "estado"
+              {sortConfig.key === "status"
                 ? sortConfig.direction === "asc"
                   ? "▲"
                   : "▼"
@@ -178,43 +199,52 @@ export default function DevicesLogic() {
                   <td className="px-6 py-4 text-center">
                     <input
                       className="border rounded px-2 py-1 w-full"
-                      value={editData.nombre ?? device.nombre}
+                      value={editData.name ?? device.name}
                       onChange={(e) =>
-                        setEditData((d) => ({ ...d, nombre: e.target.value }))
+                        setEditData((d) => ({ ...d, name: e.target.value }))
                       }
                     />
                   </td>
                   <td className="px-6 py-4 text-center">
                     <input
                       className="border rounded px-2 py-1 w-full"
-                      value={editData.ip ?? device.ip}
+                      value={editData.ipHostname ?? device.ipHostname}
                       onChange={(e) =>
-                        setEditData((d) => ({ ...d, ip: e.target.value }))
+                        setEditData((d) => ({
+                          ...d,
+                          ipHostname: e.target.value,
+                        }))
                       }
                     />
                   </td>
                   <td className="px-6 py-4 text-center">
                     <input
                       className="border rounded px-2 py-1 w-full"
-                      value={editData.usuario ?? device.usuario}
+                      value={editData.username ?? device.username}
                       onChange={(e) =>
-                        setEditData((d) => ({ ...d, usuario: e.target.value }))
+                        setEditData((d) => ({
+                          ...d,
+                          username: e.target.value,
+                        }))
                       }
                     />
                   </td>
                   <td className="px-6 py-4 text-center">
                     <input
                       className="border rounded px-2 py-1 w-full"
-                      value={editData.tipo ?? device.tipo}
+                      value={editData.type ?? device.type}
                       onChange={(e) =>
-                        setEditData((d) => ({ ...d, tipo: e.target.value }))
+                        setEditData((d) => ({
+                          ...d,
+                          type: e.target.value,
+                        }))
                       }
                     />
                   </td>
                   <td className="px-6 py-4 text-center">
                     <input
                       className="border rounded px-2 py-1 w-full bg-gray-100 cursor-not-allowed"
-                      value={device.estado}
+                      value={device.status ?? ""}
                       disabled
                     />
                   </td>
@@ -236,17 +266,17 @@ export default function DevicesLogic() {
               ) : (
                 <>
                   <td className="px-6 py-4 text-center">{device.id}</td>
-                  <td className="px-6 py-4 text-center">{device.nombre}</td>
-                  <td className="px-6 py-4 text-center">{device.ip}</td>
-                  <td className="px-6 py-4 text-center">{device.usuario}</td>
-                  <td className="px-6 py-4 text-center">{device.tipo}</td>
+                  <td className="px-6 py-4 text-center">{device.name}</td>
+                  <td className="px-6 py-4 text-center">{device.ipHostname}</td>
+                  <td className="px-6 py-4 text-center">{device.username}</td>
+                  <td className="px-6 py-4 text-center">{device.type}</td>
                   <td className="px-6 py-4 text-center">
                     <span
                       className={`px-2 py-1 rounded-full text-sm font-semibold ${
-                        estadoColors[device.estado] || ""
+                        estadoColors[device.status] || ""
                       }`}
                     >
-                      {device.estado}
+                      {device.status ?? "Sin estado"}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center space-x-2">
@@ -290,6 +320,7 @@ export default function DevicesLogic() {
                     <button
                       title="Probar Conexión"
                       className="hover:bg-sky-200 transition p-1 rounded-full cursor-pointer"
+                      onClick={() => handleTestConnection(device.id)}
                     >
                       <svg
                         width="24"

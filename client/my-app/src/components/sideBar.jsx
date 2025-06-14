@@ -12,7 +12,7 @@ export default function SideBar() {
         <ul className="space-y-2">
           <li>
             <a
-              href="/home"
+              onClick={() => navigate("/home")}
               className="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-700 transition"
             >
               <FaHome className="text-blue-300" /> Dashboard
@@ -20,7 +20,7 @@ export default function SideBar() {
           </li>
           <li>
             <a
-              href="/devices"
+              onClick={() => navigate("/devices")}
               className="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-700 transition"
             >
               <FaServer className="text-blue-300" /> Dispositivos
@@ -28,7 +28,7 @@ export default function SideBar() {
           </li>
           <li>
             <a
-              href="/backups"
+              onClick={() => navigate("/backups")}
               className="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-700 transition"
             >
               <FaDatabase className="text-blue-300" /> Backups
@@ -37,7 +37,7 @@ export default function SideBar() {
 
           <li>
             <a
-              href="/logs"
+              onClick={() => navigate("/logs")}
               className="flex items-center gap-3 px-3 py-2 rounded hover:bg-slate-700 transition"
             >
               <FaBook className="text-blue-300" /> Logs
