@@ -33,7 +33,7 @@ export default function BackupConfig() {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            periodicity,
+            periodicity: periodicity.toUpperCase(),
             automatico: auto,
           }),
         }
