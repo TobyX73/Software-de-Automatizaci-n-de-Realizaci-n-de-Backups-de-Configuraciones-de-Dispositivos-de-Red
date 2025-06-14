@@ -10,7 +10,6 @@ function HomePage() {
   const navigate = useNavigate();
   const [totalDispositivos, setTotalDispositivos] = useState(0);
   const [totalBackups, setTotalBackups] = useState(0);
-  const [ultimoBackup, setUltimoBackup] = useState("-");
   const [conectados, setConectados] = useState(0);
   const [desconectados, setDesconectados] = useState(0);
 
@@ -34,13 +33,9 @@ function HomePage() {
       .then((res) => res.json())
       .then((data) => {
         setTotalBackups(data.length);
-        if (data.length > 0) {
-          setUltimoBackup(data[0].fecha);
-        }
       })
       .catch(() => {
         setTotalBackups(0);
-        setUltimoBackup("-");
       });
   }, []);
 
@@ -77,12 +72,6 @@ function HomePage() {
             <div className="text-3xl font-bold text-gray-800">
               {totalBackups}
             </div>
-          </div>
-          <div className="bg-white rounded-lg p-6 shadow">
-            <div className="text-gray-500 font-bold mb-2">
-              Ultimo backup realizado
-            </div>
-            <div className="text-lg text-gray-800">{ultimoBackup}</div>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
