@@ -15,7 +15,7 @@ export default function BackupsTable() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/backups")
+      .get("http://localhost:8080/devices")
       .then((res) => setBackupsData(res.data))
       .catch(() => setBackupsData([]));
   }, []);
@@ -40,7 +40,7 @@ export default function BackupsTable() {
   // Ejecutar backup manual
   const handleEjecutar = (id) => {
     axios
-      .get(`http://localhost:8080/backups/execute/${id}`)
+      .post(`http://localhost:8080/backups/execute/${id}`)
       .then((res) => alert(res.data?.message || "Backup ejecutado"))
       .catch(() => alert("Error al ejecutar backup"));
   };
@@ -95,7 +95,7 @@ export default function BackupsTable() {
             <th className="py-2 px-2">Dispositivo</th>
             <th className="py-2 px-2">Fecha</th>
             <th className="py-2 px-2">Periodicidad</th>
-            <th className="py-2 px-2">Estado</th>
+
             <th className="py-2 px-2">Acciones</th>
           </tr>
         </thead>
@@ -105,9 +105,7 @@ export default function BackupsTable() {
               <td className="py-2 px-2">{b.dispositivo}</td>
               <td className="py-2 px-2">{b.fecha}</td>
               <td className="py-2 px-2">{b.periodicidad}</td>
-              <td className={`py-2 px-2 font-semibold ${estados[b.estado]}`}>
-                {b.estado}
-              </td>
+
               <td className="py-2 px-2 flex gap-2 flex-wrap">
                 <button
                   className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-sm"
