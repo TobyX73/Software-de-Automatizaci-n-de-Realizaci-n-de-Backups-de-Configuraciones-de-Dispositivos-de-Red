@@ -34,7 +34,7 @@ export default function BackupConfig({ onConfigSaved }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             periodicity: periodicity.toUpperCase(),
-            automatico: auto,
+            automatic: auto,
           }),
         }
       );
