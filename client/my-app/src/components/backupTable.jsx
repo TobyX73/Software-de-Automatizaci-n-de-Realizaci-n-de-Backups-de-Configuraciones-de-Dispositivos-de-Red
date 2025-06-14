@@ -15,27 +15,31 @@ export default function BackupsTable() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/devices")
+      .get("http://localhost:8080/backups")
       .then((res) => setBackupsData(res.data))
       .catch(() => setBackupsData([]));
   }, []);
 
+  // Lista de nombres de dispositivos únicos
   const dispositivosUnicos = [
-    ...new Set(backupsData.map((b) => b.dispositivo)),
+    ...new Set(backupsData.map((b) => b.device?.name).filter((name) => !!name)),
   ];
 
+  // Filtro y orden
   let backupsFiltrados = backupsData
     .filter(
       (b) =>
         (filtroDispositivo === "Todos" ||
-          b.dispositivo === filtroDispositivo) &&
-        (filtroEstado === "Todos" || b.estado === filtroEstado)
+          b.device?.name === filtroDispositivo) &&
+        (filtroEstado === "Todos" || b.status === filtroEstado)
     )
-    .sort((a, b) =>
-      filtroFecha === "desc"
-        ? b.fecha.localeCompare(a.fecha)
-        : a.fecha.localeCompare(b.fecha)
-    );
+    .sort((a, b) => {
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return filtroFecha === "desc"
+        ? b.date.localeCompare(a.date)
+        : a.date.localeCompare(b.date);
+    });
 
   // Ejecutar backup manual
   const handleEjecutar = (id) => {
@@ -95,17 +99,19 @@ export default function BackupsTable() {
             <th className="py-2 px-2">Dispositivo</th>
             <th className="py-2 px-2">Fecha</th>
             <th className="py-2 px-2">Periodicidad</th>
-
+            <th className="py-2 px-2">Estado</th>
             <th className="py-2 px-2">Acciones</th>
           </tr>
         </thead>
         <tbody>
           {backupsFiltrados.map((b) => (
             <tr key={b.id} className="border-b text-gray-700 hover:bg-gray-50">
-              <td className="py-2 px-2">{b.dispositivo}</td>
-              <td className="py-2 px-2">{b.fecha}</td>
-              <td className="py-2 px-2">{b.periodicidad}</td>
-
+              <td className="py-2 px-2">{b.device?.name}</td>
+              <td className="py-2 px-2">{b.date}</td>
+              <td className="py-2 px-2">{b.periodicity ?? "No definido"}</td>
+              <td className={`py-2 px-2 font-semibold ${estados[b.status]}`}>
+                {b.status}
+              </td>
               <td className="py-2 px-2 flex gap-2 flex-wrap">
                 <button
                   className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-sm"
