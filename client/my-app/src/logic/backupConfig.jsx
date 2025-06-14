@@ -7,13 +7,21 @@ export default function BackupConfig({ onConfigSaved }) {
   const [auto, setAuto] = useState(false);
   const [dispositivos, setDispositivos] = useState([]);
   const [mensaje, setMensaje] = useState("");
+  const [pendientes, setPendientes] = useState([]);
 
+  // Cargar dispositivos y backups pendientes
   useEffect(() => {
     fetch("http://localhost:8080/devices")
       .then((res) => res.json())
       .then((data) => setDispositivos(data))
       .catch(() => setDispositivos([]));
-  }, []);
+
+    // Traer dispositivos con periodicidad asignada y sin backup ejecutado
+    fetch("http://localhost:8080/backups/pendientes")
+      .then((res) => res.json())
+      .then((data) => setPendientes(data))
+      .catch(() => setPendientes([]));
+  }, [onConfigSaved]); // refresca cuando se guarda config
 
   const handleGuardar = async () => {
     setMensaje("");
@@ -56,6 +64,45 @@ export default function BackupConfig({ onConfigSaved }) {
       }
     } catch {
       setMensaje("Error de conexión con el servidor.");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error de conexión con el servidor.",
+      });
+    }
+  };
+
+  // Ejecutar backup manual para pendientes
+  const handleEjecutarBackup = async (deviceId, periodicity) => {
+    try {
+      const res = await fetch(
+        `http://localhost:8080/backups/execute/${deviceId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ periodicity: periodicity.toUpperCase() }),
+        }
+      );
+      if (res.ok) {
+        Swal.fire({
+          icon: "success",
+          title: "Backup ejecutado",
+          text: "El backup se ejecutó correctamente.",
+        });
+        // Refrescar la tabla de pendientes
+        fetch("http://localhost:8080/backups/pendientes")
+          .then((res) => res.json())
+          .then((data) => setPendientes(data))
+          .catch(() => setPendientes([]));
+        if (typeof onConfigSaved === "function") onConfigSaved();
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error al ejecutar el backup.",
+        });
+      }
+    } catch {
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -138,6 +185,48 @@ export default function BackupConfig({ onConfigSaved }) {
       {mensaje && (
         <div className="mt-2 text-sm text-center text-blue-700">{mensaje}</div>
       )}
+
+      {/* Tabla de dispositivos pendientes de backup */}
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold mb-2 text-gray-800">
+          Dispositivos con periodicidad asignada y sin backup ejecutado
+        </h3>
+        <table className="w-full text-left mb-4 border">
+          <thead>
+            <tr className="bg-slate-800 text-white">
+              <th className="py-2 px-2">ID</th>
+              <th className="py-2 px-2">Nombre</th>
+              <th className="py-2 px-2">Periodicidad</th>
+              <th className="py-2 px-2">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pendientes.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="text-center py-4 text-gray-500">
+                  No hay dispositivos pendientes de backup.
+                </td>
+              </tr>
+            ) : (
+              pendientes.map((d) => (
+                <tr key={d.id} className="border-b text-gray-700">
+                  <td className="py-2 px-2">{d.id}</td>
+                  <td className="py-2 px-2">{d.name}</td>
+                  <td className="py-2 px-2">{d.periodicity}</td>
+                  <td className="py-2 px-2">
+                    <button
+                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm"
+                      onClick={() => handleEjecutarBackup(d.id, d.periodicity)}
+                    >
+                      Ejecutar backup
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
