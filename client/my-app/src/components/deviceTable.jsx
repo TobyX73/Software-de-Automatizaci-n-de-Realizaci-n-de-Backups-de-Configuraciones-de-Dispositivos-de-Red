@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Swal from "sweetalert2"; // <-- Agrega esta línea
 
 const estadoColors = {
   Exitoso: "bg-green-100 text-green-700",
@@ -72,8 +73,19 @@ export default function DevicesLogic() {
         );
         setEditId(null);
         setEditData({});
+        Swal.fire({
+          icon: "success",
+          title: "Guardado",
+          text: "Dispositivo actualizado correctamente.",
+        });
       })
-      .catch(() => alert("Error al guardar cambios"));
+      .catch(() =>
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error al guardar cambios",
+        })
+      );
   };
 
   const handleCancel = () => {
@@ -88,17 +100,38 @@ export default function DevicesLogic() {
         setDevices((prev) => prev.filter((dev) => dev.id !== id));
         setShowDeleteModal(false);
         setDeviceToDelete(null);
+        Swal.fire({
+          icon: "success",
+          title: "Eliminado",
+          text: "Dispositivo eliminado correctamente.",
+        });
       })
-      .catch(() => alert("Error al eliminar dispositivo"));
+      .catch(() =>
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error al eliminar dispositivo",
+        })
+      );
   };
 
   const handleTestConnection = (id) => {
     axios
       .get(`${API_URL}/${id}/test-connection`)
       .then((res) => {
-        alert(res.data?.message || "Conexión exitosa");
+        Swal.fire({
+          icon: "success",
+          title: "Conexión exitosa",
+          text: res.data?.message || "Conexión SSH exitosa.",
+        });
       })
-      .catch(() => alert("Error al probar la conexión SSH"));
+      .catch(() =>
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error al probar la conexión SSH",
+        })
+      );
   };
 
   return (

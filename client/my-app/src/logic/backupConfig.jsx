@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 export default function BackupConfig() {
   const [dispositivo, setDispositivo] = useState("");
@@ -18,25 +19,47 @@ export default function BackupConfig() {
     setMensaje("");
     if (!dispositivo || !periodicity) {
       setMensaje("Seleccione dispositivo y periodicidad.");
+      Swal.fire({
+        icon: "warning",
+        title: "Campos requeridos",
+        text: "Seleccione dispositivo y periodicidad.",
+      });
       return;
     }
     try {
-      const res = await fetch("http://localhost:8080/backups/config", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          dispositivo, // id del dispositivo
-          periodicity, // nombre correcto del campo
-          automatico: auto,
-        }),
-      });
+      const res = await fetch(
+        `http://localhost:8080/devices/${dispositivo}/config-periodicity`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            periodicity,
+            automatico: auto,
+          }),
+        }
+      );
       if (res.ok) {
         setMensaje("Configuración guardada correctamente.");
+        Swal.fire({
+          icon: "success",
+          title: "Guardado",
+          text: "Configuración guardada correctamente.",
+        });
       } else {
         setMensaje("Error al guardar la configuración.");
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error al guardar la configuración.",
+        });
       }
     } catch {
       setMensaje("Error de conexión con el servidor.");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error de conexión con el servidor.",
+      });
     }
   };
 

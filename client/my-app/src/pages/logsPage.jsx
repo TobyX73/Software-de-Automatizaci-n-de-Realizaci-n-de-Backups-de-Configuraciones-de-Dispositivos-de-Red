@@ -1,5 +1,6 @@
 import SideBar from "../components/sideBar";
 import { useLogs } from "../logic/logs";
+import Swal from "sweetalert2";
 
 function LogsPage() {
   const {
@@ -12,9 +13,20 @@ function LogsPage() {
     logs,
     chosenLog,
     setChosenLog,
-
     exportLogs,
+    clearHistory,
   } = useLogs();
+
+  const handleExportLogs = () => {
+    exportLogs();
+    Swal.fire({
+      icon: "success",
+      title: "Exportado",
+      text: "Los logs se exportaron correctamente.",
+      timer: 2000,
+      showConfirmButton: false,
+    });
+  };
 
   return (
     <div className="min-h-screen flex bg-gray-100">
@@ -85,10 +97,25 @@ function LogsPage() {
 
           <div className="flex justify-center gap-4 mb-4">
             <button
-              onClick={exportLogs}
+              onClick={handleExportLogs}
               className="bg-green-600 hover:bg-green-700 text-white py-1.5 px-5 rounded-lg transition font-medium"
             >
               Exportar logs
+            </button>
+            <button
+              onClick={() => {
+                clearHistory();
+                Swal.fire({
+                  icon: "success",
+                  title: "Historial borrado",
+                  text: "Los logs han sido eliminados correctamente.",
+                  timer: 2000,
+                  showConfirmButton: false,
+                });
+              }}
+              className="bg-red-600 hover:bg-red-700 text-white py-1.5 px-5 rounded-lg transition font-medium"
+            >
+              Borrar historial
             </button>
           </div>
 

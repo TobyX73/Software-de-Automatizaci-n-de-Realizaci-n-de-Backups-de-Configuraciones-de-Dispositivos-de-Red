@@ -1,6 +1,7 @@
 import SideBar from "../components/sideBar";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 function AddDevice() {
   const navigate = useNavigate();
@@ -30,12 +31,33 @@ function AddDevice() {
       });
       if (res.ok) {
         setMensaje("Dispositivo agregado correctamente.");
+        Swal.fire({
+          icon: "success",
+          title: "Agregado",
+          text: "Dispositivo agregado correctamente.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
         setTimeout(() => navigate("/devices"), 1000);
       } else {
         setMensaje("Error al agregar el dispositivo.");
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error al agregar el dispositivo.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
       }
     } catch {
       setMensaje("Error de conexión con el servidor.");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error de conexión con el servidor.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
     }
   };
 

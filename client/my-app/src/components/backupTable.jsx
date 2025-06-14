@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const estados = {
   Exitoso: "text-green-600",
@@ -20,12 +21,10 @@ export default function BackupsTable() {
       .catch(() => setBackupsData([]));
   }, []);
 
-  // Lista de nombres de dispositivos únicos
   const dispositivosUnicos = [
     ...new Set(backupsData.map((b) => b.device?.name).filter((name) => !!name)),
   ];
 
-  // Filtro y orden
   let backupsFiltrados = backupsData
     .filter(
       (b) =>
@@ -41,14 +40,25 @@ export default function BackupsTable() {
         : a.date.localeCompare(b.date);
     });
 
-  // Ejecutar backup manual
   const handleEjecutar = (deviceId, periodicity) => {
     axios
       .post(`http://localhost:8080/backups/execute/${deviceId}`, {
-        periodicity: periodicity, // envía la periodicidad en el body
+        periodicity: periodicity,
       })
-      .then((res) => alert(res.data?.message || "Backup ejecutado"))
-      .catch(() => alert("Error al ejecutar backup"));
+      .then((res) =>
+        Swal.fire({
+          icon: "success",
+          title: "Backup ejecutado",
+          text: res.data?.message || "El backup se ejecutó correctamente.",
+        })
+      )
+      .catch(() =>
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error al ejecutar backup",
+        })
+      );
   };
 
   return (

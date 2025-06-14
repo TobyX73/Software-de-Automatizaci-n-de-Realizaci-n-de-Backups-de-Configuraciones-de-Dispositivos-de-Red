@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SideBar from "../components/sideBar";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 function HomePage() {
   const navigate = useNavigate();
@@ -40,6 +44,18 @@ function HomePage() {
       });
   }, []);
 
+  const pieData = {
+    labels: ["Conectados", "Desconectados"],
+    datasets: [
+      {
+        data: [conectados, desconectados],
+        backgroundColor: ["#4ade80", "#f87171"],
+        borderColor: ["#22c55e", "#ef4444"],
+        borderWidth: 1,
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen flex bg-gray-100">
       <SideBar />
@@ -72,11 +88,8 @@ function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white rounded-lg p-6 shadow flex flex-col items-center justify-center">
             <div className="w-64 h-64 flex items-center justify-center">
-              <span className="text-gray-400 text-center">
-                Conectados: {conectados}
-                <br />
-                Desconectados: {desconectados}
-              </span>
+              {/* Gráfico funcional */}
+              <Pie data={pieData} />
             </div>
             <div className="flex justify-center gap-6 mt-4">
               <div className="flex items-center gap-2">
