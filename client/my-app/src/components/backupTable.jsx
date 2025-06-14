@@ -96,6 +96,7 @@ export default function BackupsTable() {
       <table className="w-full text-left mb-4">
         <thead>
           <tr className="bg-slate-800 text-white">
+            <th className="py-2 px-2">ID</th>
             <th className="py-2 px-2">Dispositivo</th>
             <th className="py-2 px-2">Fecha</th>
             <th className="py-2 px-2">Periodicidad</th>
@@ -106,6 +107,7 @@ export default function BackupsTable() {
         <tbody>
           {backupsFiltrados.map((b) => (
             <tr key={b.id} className="border-b text-gray-700 hover:bg-gray-50">
+              <td className="py-2 px-2">{b.id}</td>
               <td className="py-2 px-2">{b.device?.name}</td>
               <td className="py-2 px-2">{b.date}</td>
               <td className="py-2 px-2">{b.periodicity ?? "No definido"}</td>
