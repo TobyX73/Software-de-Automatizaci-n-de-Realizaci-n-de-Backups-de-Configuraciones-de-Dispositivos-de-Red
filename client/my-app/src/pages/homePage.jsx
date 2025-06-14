@@ -48,7 +48,7 @@ function HomePage() {
     labels: ["Conectados", "Desconectados"],
     datasets: [
       {
-        data: [conectados, desconectados],
+        data: [conectados || 0, desconectados || 0],
         backgroundColor: ["#4ade80", "#f87171"],
         borderColor: ["#22c55e", "#ef4444"],
         borderWidth: 1,
@@ -88,7 +88,6 @@ function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white rounded-lg p-6 shadow flex flex-col items-center justify-center">
             <div className="w-64 h-64 flex items-center justify-center">
-              {/* Gráfico funcional */}
               <Pie data={pieData} />
             </div>
             <div className="flex justify-center gap-6 mt-4">
