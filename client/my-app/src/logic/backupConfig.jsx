@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
-export default function BackupConfig() {
+export default function BackupConfig({ onConfigSaved }) {
   const [dispositivo, setDispositivo] = useState("");
   const [periodicity, setPeriodicity] = useState("");
   const [auto, setAuto] = useState(false);
@@ -45,6 +45,7 @@ export default function BackupConfig() {
           title: "Guardado",
           text: "Configuración guardada correctamente.",
         });
+        if (typeof onConfigSaved === "function") onConfigSaved();
       } else {
         setMensaje("Error al guardar la configuración.");
         Swal.fire({

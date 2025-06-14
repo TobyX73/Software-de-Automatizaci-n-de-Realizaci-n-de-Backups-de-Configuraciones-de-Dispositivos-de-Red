@@ -8,7 +8,7 @@ const estados = {
   Pendiente: "text-yellow-600",
 };
 
-export default function BackupsTable() {
+export default function BackupsTable({ refresh }) {
   const [backupsData, setBackupsData] = useState([]);
   const [filtroDispositivo, setFiltroDispositivo] = useState("Todos");
   const [filtroEstado, setFiltroEstado] = useState("Todos");
@@ -19,7 +19,7 @@ export default function BackupsTable() {
       .get("http://localhost:8080/backups")
       .then((res) => setBackupsData(res.data))
       .catch(() => setBackupsData([]));
-  }, []);
+  }, [refresh]);
 
   const dispositivosUnicos = [
     ...new Set(backupsData.map((b) => b.device?.name).filter((name) => !!name)),
