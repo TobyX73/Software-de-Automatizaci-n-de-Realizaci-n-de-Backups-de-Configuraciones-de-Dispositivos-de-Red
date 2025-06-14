@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 export default function BackupConfig() {
   const [dispositivo, setDispositivo] = useState("");
-  const [periodicidad, setPeriodicidad] = useState("");
+  const [periodicity, setPeriodicity] = useState("");
   const [auto, setAuto] = useState(false);
   const [dispositivos, setDispositivos] = useState([]);
   const [mensaje, setMensaje] = useState("");
@@ -16,7 +16,7 @@ export default function BackupConfig() {
 
   const handleGuardar = async () => {
     setMensaje("");
-    if (!dispositivo || !periodicidad) {
+    if (!dispositivo || !periodicity) {
       setMensaje("Seleccione dispositivo y periodicidad.");
       return;
     }
@@ -25,8 +25,8 @@ export default function BackupConfig() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          dispositivo,
-          periodicidad,
+          dispositivo, // id del dispositivo
+          periodicity, // nombre correcto del campo
           automatico: auto,
         }),
       });
@@ -56,7 +56,7 @@ export default function BackupConfig() {
         >
           <option value="">Seleccione un dispositivo</option>
           {dispositivos.map((d) => (
-            <option key={d.id} value={d.name}>
+            <option key={d.id} value={d.id}>
               {d.name}
             </option>
           ))}
@@ -68,30 +68,30 @@ export default function BackupConfig() {
           <label className="flex items-center gap-2">
             <input
               type="radio"
-              name="periodicidad"
+              name="periodicity"
               value="Diario"
-              checked={periodicidad === "Diario"}
-              onChange={() => setPeriodicidad("Diario")}
+              checked={periodicity === "Diario"}
+              onChange={() => setPeriodicity("Diario")}
             />
             <span className="text-gray-700">Diario</span>
           </label>
           <label className="flex items-center gap-2">
             <input
               type="radio"
-              name="periodicidad"
+              name="periodicity"
               value="Semanal"
-              checked={periodicidad === "Semanal"}
-              onChange={() => setPeriodicidad("Semanal")}
+              checked={periodicity === "Semanal"}
+              onChange={() => setPeriodicity("Semanal")}
             />
             <span className="text-gray-700">Semanal</span>
           </label>
           <label className="flex items-center gap-2">
             <input
               type="radio"
-              name="periodicidad"
+              name="periodicity"
               value="Mensual"
-              checked={periodicidad === "Mensual"}
-              onChange={() => setPeriodicidad("Mensual")}
+              checked={periodicity === "Mensual"}
+              onChange={() => setPeriodicity("Mensual")}
             />
             <span className="text-gray-700">Mensual</span>
           </label>

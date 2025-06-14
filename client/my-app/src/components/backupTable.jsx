@@ -42,9 +42,11 @@ export default function BackupsTable() {
     });
 
   // Ejecutar backup manual
-  const handleEjecutar = (deviceId) => {
+  const handleEjecutar = (deviceId, periodicity) => {
     axios
-      .post(`http://localhost:8080/backups/execute/${deviceId}`)
+      .post(`http://localhost:8080/backups/execute/${deviceId}`, {
+        periodicity: periodicity, // envía la periodicidad en el body
+      })
       .then((res) => alert(res.data?.message || "Backup ejecutado"))
       .catch(() => alert("Error al ejecutar backup"));
   };
@@ -119,7 +121,7 @@ export default function BackupsTable() {
               <td className="py-2 px-2 flex gap-2 flex-wrap">
                 <button
                   className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-sm"
-                  onClick={() => handleEjecutar(b.device?.id)}
+                  onClick={() => handleEjecutar(b.device?.id, b.periodicity)}
                 >
                   Ejecutar ahora
                 </button>

@@ -12,7 +12,7 @@ export default function DevicesLogic() {
   const [devices, setDevices] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [filtroNombre, setFiltroNombre] = useState("");
-  const [estadoFiltro, setEstadoFiltro] = useState("Todos");
+
   const [editId, setEditId] = useState(null);
   const [editData, setEditData] = useState({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -20,7 +20,6 @@ export default function DevicesLogic() {
 
   const API_URL = "http://localhost:8080/devices";
 
-  // Cargar dispositivos desde la API
   useEffect(() => {
     axios
       .get(API_URL)
@@ -28,7 +27,6 @@ export default function DevicesLogic() {
       .catch(() => console.error("Error al cargar dispositivos"));
   }, []);
 
-  // Ordenar dispositivos
   const sortedDevices = [...devices].sort((a, b) => {
     if (!sortConfig.key) return 0;
     let aValue = a[sortConfig.key];
@@ -42,7 +40,6 @@ export default function DevicesLogic() {
     return 0;
   });
 
-  // Filtrar dispositivos por texto y estado
   const filteredDevices = sortedDevices.filter((device) => {
     const matchTexto = [
       device.id,
@@ -55,14 +52,10 @@ export default function DevicesLogic() {
       .join(" ")
       .toLowerCase()
       .includes(filtroNombre.toLowerCase());
-    const matchEstado =
-      estadoFiltro === "Todos"
-        ? true
-        : (device.status || "Pendiente") === estadoFiltro;
-    return matchTexto && matchEstado;
+
+    return matchTexto;
   });
 
-  // Cambiar orden
   const handleSort = (key) => {
     setSortConfig((prev) => ({
       key,
@@ -70,7 +63,6 @@ export default function DevicesLogic() {
     }));
   };
 
-  // Guardar cambios de edición (PUT)
   const handleSave = (id) => {
     axios
       .put(`${API_URL}/${id}`, editData)
@@ -84,13 +76,11 @@ export default function DevicesLogic() {
       .catch(() => alert("Error al guardar cambios"));
   };
 
-  // Cancelar edición
   const handleCancel = () => {
     setEditId(null);
     setEditData({});
   };
 
-  // Eliminar dispositivo (DELETE)
   const handleDelete = (id) => {
     axios
       .delete(`${API_URL}/${id}`)
@@ -102,7 +92,6 @@ export default function DevicesLogic() {
       .catch(() => alert("Error al eliminar dispositivo"));
   };
 
-  // Probar conexión SSH
   const handleTestConnection = (id) => {
     axios
       .get(`${API_URL}/${id}/test-connection`)
@@ -114,7 +103,6 @@ export default function DevicesLogic() {
 
   return (
     <div>
-      {/* Buscador y filtro de estado */}
       <div className="flex items-center mb-4 w-full">
         <div className="relative w-72">
           <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -142,18 +130,6 @@ export default function DevicesLogic() {
             className="pl-10 pr-4 py-1 w-full border border-gray-500 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-gray-200 transition placeholder-gray-700 text-gray-900"
           />
         </div>
-        <select
-          value={estadoFiltro}
-          onChange={(e) => setEstadoFiltro(e.target.value)}
-          className="ml-auto border border-gray-500 rounded-lg py-1 px-3 shadow focus:outline-none focus:ring-2 focus:ring-gray-200 text-gray-900"
-          style={{ minWidth: 180 }}
-        >
-          <option value="Todos">Todos los dispositivos</option>
-          <option value="Exitoso">Exitoso</option>
-          <option value="Fallido">Fallido</option>
-          <option value="Pendiente">Pendiente</option>
-          <option value="null">Sin estado</option>
-        </select>
       </div>
       <table className="min-w-full text-black bg-white rounded-lg shadow overflow-hidden">
         <thead>
@@ -360,7 +336,6 @@ export default function DevicesLogic() {
         </tbody>
       </table>
 
-      {/* Modal de confirmación de eliminación */}
       {showDeleteModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">

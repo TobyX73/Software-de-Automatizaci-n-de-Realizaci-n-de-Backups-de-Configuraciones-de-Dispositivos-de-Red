@@ -12,7 +12,7 @@ function LogsPage() {
     logs,
     chosenLog,
     setChosenLog,
-    clearHistory,
+
     exportLogs,
   } = useLogs();
 
@@ -26,9 +26,7 @@ function LogsPage() {
             Logs del Sistema de Backups
           </div>
 
-          {/* Filtros */}
           <div className="flex p-4 gap-4 rounded-md justify-center">
-            {/* Filtro por tipo */}
             <div>
               <label className="text-sm font-medium text-gray-700 mr-2">
                 Tipo:
@@ -39,12 +37,16 @@ function LogsPage() {
                 className="bg-white border border-gray-300 rounded px-2 py-1 text-sm text-gray-700 pr-13"
               >
                 <option>Todos</option>
-                <option>INFO</option>
-                <option>ERROR</option>
+                {[...new Set(logs.map((log) => log.tipo))]
+                  .filter(Boolean)
+                  .map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
               </select>
             </div>
 
-            {/* Filtro por fecha */}
             <div className="flex items-center">
               <label className="text-sm font-medium text-gray-700 mr-2">
                 Fecha:
@@ -60,7 +62,6 @@ function LogsPage() {
               </div>
             </div>
 
-            {/* Filtro por dispositivo */}
             <div>
               <label className="text-sm font-medium text-gray-700 mr-2">
                 Dispositivo:
@@ -71,21 +72,18 @@ function LogsPage() {
                 className="bg-white border border-gray-300 rounded px-2 py-1 text-sm text-gray-700 pr-13"
               >
                 <option>Todos</option>
-                <option>Router</option>
-                <option>Servidor</option>
-                <option>Firewall</option>
+                {[...new Set(logs.map((log) => log.dispositivo))]
+                  .filter(Boolean)
+                  .map((d) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>
 
-          {/* Botones de acción */}
           <div className="flex justify-center gap-4 mb-4">
-            <button
-              onClick={clearHistory}
-              className="bg-red-600 hover:bg-red-700 text-white py-1.5 px-5 rounded-lg transition font-medium"
-            >
-              Limpiar logs
-            </button>
             <button
               onClick={exportLogs}
               className="bg-green-600 hover:bg-green-700 text-white py-1.5 px-5 rounded-lg transition font-medium"
@@ -94,7 +92,6 @@ function LogsPage() {
             </button>
           </div>
 
-          {/* Tabla de logs */}
           <table className="rounded-lg min-w-full divide-y divide-gray-200 shadow">
             <thead className="bg-gray-700 text-white">
               <tr>

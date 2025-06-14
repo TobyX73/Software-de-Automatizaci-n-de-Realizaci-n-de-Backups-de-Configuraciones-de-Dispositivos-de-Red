@@ -1,12 +1,42 @@
 import SideBar from "../components/sideBar";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function AddDevice() {
   const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [ipHostname, setIpHostname] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [type, setType] = useState("");
+  const [useSshKey, setUseSshKey] = useState(false);
+  const [mensaje, setMensaje] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/devices");
+    setMensaje("");
+    try {
+      const res = await fetch("http://localhost:8080/devices", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          ipHostname,
+          username,
+          password,
+          type,
+          useSshKey,
+        }),
+      });
+      if (res.ok) {
+        setMensaje("Dispositivo agregado correctamente.");
+        setTimeout(() => navigate("/devices"), 1000);
+      } else {
+        setMensaje("Error al agregar el dispositivo.");
+      }
+    } catch {
+      setMensaje("Error de conexión con el servidor.");
+    }
   };
 
   return (
@@ -25,6 +55,8 @@ function AddDevice() {
               <input
                 required
                 type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full p-2 border rounded bg-gray-50 focus:bg-blue-50 hover:bg-blue-50 border-gray-300 focus:border-blue-500 transition-colors"
               />
             </div>
@@ -34,6 +66,8 @@ function AddDevice() {
               <input
                 required
                 type="text"
+                value={ipHostname}
+                onChange={(e) => setIpHostname(e.target.value)}
                 className="no-spinner w-full p-2 border rounded bg-gray-50 focus:bg-blue-50 hover:bg-blue-50 border-gray-300 focus:border-blue-500 transition-colors"
               />
             </div>
@@ -42,6 +76,8 @@ function AddDevice() {
               <input
                 required
                 type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="w-full p-2 border rounded bg-gray-50 focus:bg-blue-50 hover:bg-blue-50 border-gray-300 focus:border-blue-500 transition-colors"
               />
             </div>
@@ -50,6 +86,8 @@ function AddDevice() {
               <input
                 required
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-2 border rounded bg-gray-50 focus:bg-blue-50 hover:bg-blue-50 border-gray-300 focus:border-blue-500 transition-colors"
               />
             </div>
@@ -57,6 +95,8 @@ function AddDevice() {
               <input
                 type="checkbox"
                 id="useSshKey"
+                checked={useSshKey}
+                onChange={() => setUseSshKey(!useSshKey)}
                 className="mr-2 accent-blue-600"
               />
               <label htmlFor="useSshKey" className="text-gray-700">
@@ -67,6 +107,8 @@ function AddDevice() {
               <label className="block text-gray-700">Tipo de Dispositivo</label>
               <select
                 required
+                value={type}
+                onChange={(e) => setType(e.target.value)}
                 className="w-full p-2 border rounded bg-gray-50 focus:bg-blue-50 hover:bg-blue-50 border-gray-300 focus:border-blue-500 transition-colors"
               >
                 <option value="">Seleccione un tipo</option>
@@ -81,6 +123,9 @@ function AddDevice() {
             >
               Agregar Dispositivo
             </button>
+            {mensaje && (
+              <div className="mt-4 text-center text-blue-700">{mensaje}</div>
+            )}
           </form>
         </div>
       </main>
