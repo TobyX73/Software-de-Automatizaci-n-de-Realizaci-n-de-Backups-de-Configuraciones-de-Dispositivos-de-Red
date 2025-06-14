@@ -11,9 +11,7 @@ export const useLogs = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/logs", {
-        params: { type, date, device },
-      })
+      .get("http://localhost:8080/api/logs")
       .then((res) => setLogs(res.data))
       .catch((err) => console.error(err));
   }, [type, date, device]);

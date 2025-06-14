@@ -120,20 +120,20 @@ function LogsPage() {
                   className="cursor-pointer hover:bg-gray-50"
                 >
                   <td className="px-6 py-4 text-sm text-left text-gray-700">
-                    {log.date}
+                    {log.fecha}
                   </td>
                   <td
                     className={`px-6 py-4 text-sm text-left font-bold ${
-                      log.type === "ERROR" ? "text-red-700" : "text-green-600"
+                      log.tipo === "ERROR" ? "text-red-700" : "text-green-600"
                     }`}
                   >
-                    {log.type}
+                    {log.tipo}
                   </td>
                   <td className="px-6 py-4 text-sm text-left text-gray-700">
-                    {log.device}
+                    {log.dispositivo}
                   </td>
                   <td className="px-6 py-4 text-sm text-left text-gray-700">
-                    {log.description}
+                    {log.descripcion}
                   </td>
                 </tr>
               ))}
@@ -150,7 +150,7 @@ function LogsPage() {
               <tr>
                 <td className="text-sm flex font-mono text-gray-700 p-6 mb-6">
                   {chosenLog
-                    ? chosenLog.extendedDescription ||
+                    ? chosenLog.descripcion ||
                       "Este log no contiene información ampliada."
                     : "Seleccione un log para ver los detalles aquí."}
                 </td>

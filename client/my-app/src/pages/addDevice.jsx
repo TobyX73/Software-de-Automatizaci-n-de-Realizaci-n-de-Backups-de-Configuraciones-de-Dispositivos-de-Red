@@ -12,7 +12,7 @@ function AddDevice() {
   return (
     <div className="flex">
       <SideBar />
-      <main className="flex flex-col flex-1 p-6 overflow-y-auto bg-gray-100 relative items-center justify-center min-h-screen"> 
+      <main className="flex flex-col flex-1 p-6 overflow-y-auto bg-gray-100 relative items-center justify-center min-h-screen">
         <h1 className="justify-self-start text-3xl font-bold text-black mb-6">
           Agregar Nuevo Dispositivo
         </h1>
@@ -33,7 +33,7 @@ function AddDevice() {
               <label className="block text-gray-700">Dirección IP</label>
               <input
                 required
-                type="number"
+                type="text"
                 className="no-spinner w-full p-2 border rounded bg-gray-50 focus:bg-blue-50 hover:bg-blue-50 border-gray-300 focus:border-blue-500 transition-colors"
               />
             </div>
@@ -65,7 +65,10 @@ function AddDevice() {
             </div>
             <div className="text-black mb-4">
               <label className="block text-gray-700">Tipo de Dispositivo</label>
-              <select required className="w-full p-2 border rounded bg-gray-50 focus:bg-blue-50 hover:bg-blue-50 border-gray-300 focus:border-blue-500 transition-colors">
+              <select
+                required
+                className="w-full p-2 border rounded bg-gray-50 focus:bg-blue-50 hover:bg-blue-50 border-gray-300 focus:border-blue-500 transition-colors"
+              >
                 <option value="">Seleccione un tipo</option>
                 <option value="router">Router</option>
                 <option value="switch">Switch</option>
