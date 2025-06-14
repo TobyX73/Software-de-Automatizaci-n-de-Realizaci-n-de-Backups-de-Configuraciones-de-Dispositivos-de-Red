@@ -42,9 +42,9 @@ export default function BackupsTable() {
     });
 
   // Ejecutar backup manual
-  const handleEjecutar = (id) => {
+  const handleEjecutar = (deviceId) => {
     axios
-      .post(`http://localhost:8080/backups/execute/${id}`)
+      .post(`http://localhost:8080/backups/execute/${deviceId}`)
       .then((res) => alert(res.data?.message || "Backup ejecutado"))
       .catch(() => alert("Error al ejecutar backup"));
   };
@@ -96,7 +96,8 @@ export default function BackupsTable() {
       <table className="w-full text-left mb-4">
         <thead>
           <tr className="bg-slate-800 text-white">
-            <th className="py-2 px-2">ID</th>
+            <th className="py-2 px-2">ID Backup</th>
+            <th className="py-2 px-2">ID Dispositivo</th>
             <th className="py-2 px-2">Dispositivo</th>
             <th className="py-2 px-2">Fecha</th>
             <th className="py-2 px-2">Periodicidad</th>
@@ -108,6 +109,7 @@ export default function BackupsTable() {
           {backupsFiltrados.map((b) => (
             <tr key={b.id} className="border-b text-gray-700 hover:bg-gray-50">
               <td className="py-2 px-2">{b.id}</td>
+              <td className="py-2 px-2">{b.device?.id}</td>
               <td className="py-2 px-2">{b.device?.name}</td>
               <td className="py-2 px-2">{b.date}</td>
               <td className="py-2 px-2">{b.periodicity ?? "No definido"}</td>
@@ -117,7 +119,7 @@ export default function BackupsTable() {
               <td className="py-2 px-2 flex gap-2 flex-wrap">
                 <button
                   className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-sm"
-                  onClick={() => handleEjecutar(b.id)}
+                  onClick={() => handleEjecutar(b.device?.id)}
                 >
                   Ejecutar ahora
                 </button>
